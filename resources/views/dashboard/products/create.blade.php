@@ -149,7 +149,21 @@
 
                 </div>
 
-                <div class="form-group col-3">
+                <div class="form-group col-2">
+                    <label for="colors">
+
+                        @lang('site.colors')
+
+
+                    </label>
+                    <select class="selectpicker" multiple name="color[]">
+                        @foreach ($colors as $color)
+                        <option value="{{$color->id}}">{{$color->name_ar}}-{{$color->name_en}}</option>
+                        @endforeach
+
+                      </select>
+                </div>
+                <div class="form-group col-2">
                     <label for="before_price">
 
                         @lang('site.before_price')
@@ -160,7 +174,7 @@
                         class="form-control @error('before_price') is-invalid @enderror" id="before_price" disabled>
                 </div>
 
-                <div class="form-group col-3">
+                <div class="form-group col-2">
                     <label for="price">
 
                         @lang('site.price')
@@ -279,6 +293,11 @@
 
 
         </div>
+        <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
+            <option value="AL">Alabama</option>
+              ...
+            <option value="WY">Wyoming</option>
+          </select>
 
         <button type="submit" class="btn btn-primary col-6 m-auto mb-5">
             @lang('site.save')
@@ -286,7 +305,7 @@
 
     </form>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
     <script type="text/javascript">
 
@@ -385,7 +404,7 @@
 
         // when page is ready
         $(document).ready(function() {
-            // on form submit
+
             $("#form").on('submit', function() {
                 // to each unchecked checkbox
                 $(this + 'input[type=checkbox]:not(:checked)').each(function() {

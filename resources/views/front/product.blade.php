@@ -198,9 +198,43 @@
 
 
                 <br>
+
+                <div id="colors" class="mb-2">
+                    <div id="s" class="color-blocks" style="">
+                        <span>@lang('site.color') :</span>
+
+                        @if ($product->colors->count() > 0)
+                            <div class="d-flex rtl-margin">
+                                {{-- @foreach ($product->colors as $color)
+
+                                    <div class="radio-inline color">
+                                        <input type="radio" name="color" value="{{ $color->id }}"
+                                            >
+                                            {{$color->name_en}}
+                                        <label for="color-{{ $color->id }}">{{ $color->color->name_en }}</label>
+
+                                    </div>
+
+
+                                @endforeach --}}
+                                <select class="form-control" id="exampleFormControlSelect1" name="color">
+                                    @foreach ($product->colors as $color)
+                                    <option value="{{ $color->id }}">{{$color->color->name_en}}</option>
+                                    @endforeach
+                                  </select>
+                            </div>
+                        @else
+                            المنتج غير متوفر
+                        @endif
+                    </div>
+                </div>
+                <br>
+                @if (Lang::locale() == 'ar')
+                <br>
+                @endif
                 @if ($product->basic_category->type!= 1)
 
-                <div id="colors">
+                <div id="colors" class="mb-2">
                     <div id="s" class="color-blocks" style="">
                         <span>@lang('site.size') :</span>
 
@@ -244,7 +278,7 @@
                         class="cart_quantity_input form-control grey count" value="1" name="quantity">
                     <a rel="nofollow" class="btn btn-default btn-plus" href="#" title="Add" style="margin: -9px;">+</a>
                 </form>
-                @if ($product->basic_category->type!= 1)
+                @if ($product->basic_category->type!= 1 &&$product->size_guide_id !=null )
 
                 <a class="btn bg-main " data-toggle="modal" data-target="#exampleModalCenter"
                     style="width: 100%;background: #d76797 !important;">@lang('site.size_guide')</a>
@@ -418,7 +452,7 @@
 
     <!-- Button trigger modal -->
 
-    @if ($product->basic_category->type!= 1)
+    @if ($product->basic_category->type!= 1 && $product->size_guide_id !=null)
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"

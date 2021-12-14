@@ -32,14 +32,14 @@
 
 
 /* @font-face {
-                    font-family: "M Sung PRC";
-                    src: url("//db.onlinewebfonts.com/t/be395203fb38e2f170265aa2a9785467.eot");
-                    src: url("//db.onlinewebfonts.com/t/be395203fb38e2f170265aa2a9785467.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/be395203fb38e2f170265aa2a9785467.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/be395203fb38e2f170265aa2a9785467.woff") format("woff"), url("//db.onlinewebfonts.com/t/be395203fb38e2f170265aa2a9785467.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/be395203fb38e2f170265aa2a9785467.svg#M Sung PRC") format("svg");
-                } */
+                            font-family: "M Sung PRC";
+                            src: url("//db.onlinewebfonts.com/t/be395203fb38e2f170265aa2a9785467.eot");
+                            src: url("//db.onlinewebfonts.com/t/be395203fb38e2f170265aa2a9785467.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/be395203fb38e2f170265aa2a9785467.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/be395203fb38e2f170265aa2a9785467.woff") format("woff"), url("//db.onlinewebfonts.com/t/be395203fb38e2f170265aa2a9785467.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/be395203fb38e2f170265aa2a9785467.svg#M Sung PRC") format("svg");
+                        } */
 
 body {
     /* font-family: 'Nunito';
-            ; */
+                    ; */
     font-family: 'Nunito', sans-serif !important;
     text-transform: capitalize;
     color: #444444;
@@ -97,9 +97,9 @@ a {
 
 
 /*
-        .bg-b a {
-            color: #fff!important;
-        } */
+                .bg-b a {
+                    color: #fff!important;
+                } */
 
 .bg-w,
 .bg-w a {
@@ -421,7 +421,7 @@ footer {
 
 .color-blocks .color label,
 .color-blocks .color a {
-    width: 33px;
+    width: 85px;
     height: 34px;
     border: 2px solid #828385;
     padding: 1px;
@@ -636,9 +636,9 @@ select {
 
 
 /*
-        p a {
-            padding: 5px;
-        } */
+                p a {
+                    padding: 5px;
+                } */
 
 
 /* (A) STANDARD ROW HEIGHT */
@@ -725,14 +725,14 @@ select {
 
 
 /*
-        .custom-nav-icon {
-            display: inline-block;
-            margin: -12px 24px;
-        }
-
-        .custom-nav-icon1 {
-            margin-right: 10px;
-        } */
+                .custom-nav-icon {
+                    display: inline-block;
+                    margin: -12px 24px;
+                }
+        
+                .custom-nav-icon1 {
+                    margin-right: 10px;
+                } */
 
 .sml-fa {
     font-size: 20px !important;
@@ -877,8 +877,8 @@ div#s:lang(ar) {
 
 .product-dir:lang(ar) {
     /* display: flex;
-            flex-direction: column;
-            align-items: end; */
+                    flex-direction: column;
+                    align-items: end; */
     margin: auto;
     margin-top: 0px;
 }
@@ -1109,17 +1109,17 @@ swal2-confirm swal2-styled {
 
 
 /*
-        .swal2-icon.swal2-error.swal2-icon-show {
-            display: none !important;
-        }
-
-        .swal2-x-mark {
-            display: none !important;
-        }
-
-        .swal2-styled.swal2-confirm {
-            background-color: #f13582 !important;
-        }*/
+                .swal2-icon.swal2-error.swal2-icon-show {
+                    display: none !important;
+                }
+        
+                .swal2-x-mark {
+                    display: none !important;
+                }
+        
+                .swal2-styled.swal2-confirm {
+                    background-color: #f13582 !important;
+                }*/
 
 .middle {
     transition: .5s ease;

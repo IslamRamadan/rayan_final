@@ -157,11 +157,29 @@
                         @lang('site.description_en')
                     </label>
                     <textarea name="description_en" class="form-control @error('description_en') is-invalid @enderror"
-                        id="description_ar">{{ $product->description_ar }}</textarea>
+                        id="description_en">{{ $product->description_en }}</textarea>
 
                 </div>
+                <div class="form-group col-2">
 
-                <div class="form-group col-3">
+                    <select  multiple name="color[]">
+                        @foreach ($colors as $color)
+                        <option value="{{$color->id}}"
+
+                            @foreach ($color_products as $color_product)
+                            @if ($color_product == $color->id)  {{ 'selected' }} @endif
+                            @endforeach
+
+                            >{{$color->name_ar}}-{{$color->name_en}}</option>
+                        @endforeach
+
+                      </select>
+                      {{-- <label for="colors">
+                        @lang('site.colors')
+                    </label> --}}
+                </div>
+
+                <div class="form-group col-2">
                     <label for="before_price">
 
                         @lang('site.before_price')
@@ -170,7 +188,7 @@
                     <input value="{{ $product->before_price }}" type="number" step=".01" name="before_price"
                         class="form-control @error('before_price') is-invalid @enderror" id="before_price">
                 </div>
-                <div class="form-group col-3">
+                <div class="form-group col-2">
                     <label for="price">
 
                         @lang('site.price')

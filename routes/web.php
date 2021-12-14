@@ -113,6 +113,7 @@ Route::group(
         Route::get('basic_categories/destroy/{id}','Backend\BasicCategoryController@destroy');
         Route::get('size_guides/destroy/{id}','Backend\SizeGuideController@destroy');
         Route::get('countries/destroy/{id}','Backend\CountryController@destroy');
+        Route::get('colors/destroy/{id}','Backend\ColorController@destroy');
         Route::get('cities/destroy/{id}','Backend\CityController@destroy');
         Route::get('cities/view/{country_id}','Backend\CountryController@cities')->name('cities.view');
         Route::resource('pages','Backend\PagesController');
@@ -123,6 +124,7 @@ Route::group(
         Route::resource('categories','Backend\CategoryController');
         Route::resource('currencies','Backend\CurrencyController');
         Route::resource('countries','Backend\CountryController');
+        Route::resource('colors','Backend\ColorController');
         Route::resource('cities','Backend\CityController');
         Route::resource('sliders','Backend\sliderController');
         Route::resource('sizes','Backend\SizeController');
@@ -156,6 +158,7 @@ Route::group(
 //<<<<<<< Updated upstream
         Route::post('custom_admins/update','Backend\AdminController@updateAdmin')->name('admins.update.admin');
         Route::post('custom_countries/update/{id}','Backend\CountryController@updateCountry')->name('countries.update.country');
+        Route::post('custom_colors/update/{id}','Backend\ColorController@updateColor')->name('colors.update.color');
         Route::post('custom_cities/update/{id}','Backend\CityController@updateCity')->name('cities.update.city');
         Route::post('custom_pages/update/{id}','Backend\PagesController@updatePage')->name('pages.update.page');
         Route::post('custom_basic_categories/update/{id}','Backend\BasicCategoryController@updateBasicCategory')->name('basic_categories.update.basic_category');

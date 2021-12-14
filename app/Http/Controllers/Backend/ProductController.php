@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Backend;
 use App\BasicCategory;
 use App\Category;
 use App\Height;
+use App\Color;
+use App\ProdColor;
 use App\Http\Controllers\Controller;
 use App\ProdHeight;
 use App\ProdImg;
@@ -41,11 +43,11 @@ class ProductController extends Controller
 
 
                     $action = '
-                    <a class="btn btn-success"  href="' . route('products.edit', $row->id) . '" >'.\Lang::get('site.edit').' </a>
+                    <a class="btn btn-success"  href="' . route('products.edit', $row->id) . '" >' . \Lang::get('site.edit') . ' </a>
 
-                        <a class="btn btn-outline-dark"  href="' . route('product_galaries.index', $row->id) . '" >'.\Lang::get('site.images').' </a>
+                        <a class="btn btn-outline-dark"  href="' . route('product_galaries.index', $row->id) . '" >' . \Lang::get('site.images') . ' </a>
                       <meta name="csrf-token" content="{{ csrf_token() }}">
-                         <a  href="' . route('products.destroy', $row->id) . '" class="btn btn-danger">'.\Lang::get('site.delete').'</a>';
+                         <a  href="' . route('products.destroy', $row->id) . '" class="btn btn-danger">' . \Lang::get('site.delete') . '</a>';
                     return $action;
                 })
                 ->rawColumns(['action'])
@@ -65,12 +67,13 @@ class ProductController extends Controller
         $size_guides = SizeGuide::all();
         $sizes = Size::all();
         $heights = Height::all();
+        $colors = Color::all();
         $basic_categories = BasicCategory::all();
         //        dd($sizes);
         //        $categories=Category::all();
 
 
-        return view('dashboard.products.create', compact('basic_categories', 'sizes', 'heights', 'size_guides'));
+        return view('dashboard.products.create', compact('basic_categories', 'sizes', 'heights', 'size_guides', 'colors'));
     }
 
     public function ajaxcat(Request $request)
@@ -95,6 +98,7 @@ class ProductController extends Controller
 
 
             'photo.required' => "صورة المنتج مطلوبة",
+            'color.required' => "برجاء ادخال لون المنتج",
             'size_guide_id.required' => "برجاء اختيار دليل المقاسات المناسب",
             'photo.mimes' => " يجب ان تكون الصورة jpg او jpeg او png  ",
             'photo.max' => " الحد الاقصي للصورة 4 ميجا ",
@@ -108,11 +112,11 @@ class ProductController extends Controller
 
         $validator = Validator::make($request->all(), [
             "basic_category_id" => "required",
-            "category_id" => "required",
+            // "category_id" => "required",
             // "size_guide_id" => "required",
             //            "height.*" => "required",
             //            "quantity.*" => "required",
-            //            'size' => 'required',
+            'color' => 'required',
             "price" => "required|Numeric|between:0.1,999.99",
             'photo' => 'required|mimes:jpg,jpeg,png|max:4100',
             //            'size_photo' => 'required|mimes:jpg,jpeg,png|max:4100',
@@ -126,7 +130,7 @@ class ProductController extends Controller
         }
         $cat_type = BasicCategory::find($request->basic_category_id)->type;
         // dd($cat_type);
-        if ((!$request->has('size') && $cat_type != 1) || ($request->size_guide_id == null && $cat_type != 1)) {
+        if ((!$request->has('size') && $cat_type != 1)) {
             Alert::error('error', "برجاء اختيار المقاسات و دليل المقاسات");
             return back()->withInput();
         }
@@ -140,8 +144,8 @@ class ProductController extends Controller
         if (!Storage::exists($path)) {
             Storage::disk('public')->makeDirectory($path);
         }
-        $img = \Image::make($image)->resize(512, 640);
-        $img->save(public_path('storage/' . $path . $file_name), 60);
+        $img = \Image::make($image)->resize(640 , 690);
+        $img->save(public_path('storage/' . $path . $file_name), 80);
         //dd($request->all());
         //        $image2 = $request->size_photo;
         //        $original_name2 = strtolower(trim($image2->getClientOriginalName()));
@@ -160,7 +164,7 @@ class ProductController extends Controller
             'featured' => $request['featured'] ?: 0,
             'basic_category_id' => $request['basic_category_id'],
             'category_id' => $request['category_id'] ?: 0,
-            'size_guide_id' => $request['size_guide_id'] ?: 0,
+            'size_guide_id' => $request['size_guide_id'] ?: null,
             'title_ar' => $request['title_ar'] ?: '',
             'title_en' => $request['title_en'] ?: '',
             'description_en' => $request['description_en'] ?: '',
@@ -170,7 +174,22 @@ class ProductController extends Controller
             'img' => $path . $file_name,
         ]);
 
-        if ($request->has('size')&& $cat_type != 1) {
+        if ($request->has('color') ) {
+            // dd('color');
+            if (count($request->color) > 0) {
+                foreach ($request->color as $color) {
+
+                    if ($color) {
+                        ProdColor::create([
+                            "product_id" => $product->id,
+                            "color_id" => $color,
+                        ]);
+                    }
+                }
+            }
+        }
+
+        if ($request->has('size') && $cat_type != 1) {
             if (count($request->size) > 0) {
 
                 foreach ($request->size as $size) {
@@ -196,15 +215,14 @@ class ProductController extends Controller
                 }
             }
         }
-        if($cat_type == 1){
-            $quantity=$request->qut;
+        if ($cat_type == 1) {
+            $quantity = $request->qut;
             ProdHeight::create([
                 "product_id" => $product->id,
                 "size_id" => 0,
                 'height_id' => 0,
                 'quantity' => $quantity,
             ]);
-
         }
 
         if (session()->has("success")) {
@@ -293,9 +311,13 @@ class ProductController extends Controller
         $sizes = Size::all();
         $size_guides = SizeGuide::all();
         $heights = Height::all();
+        $colors = Color::all();
         $product = Product::findOrFail($id);
         ////        $products=Product::all();
         $size_products = ProdSize::where('product_id', $id)->pluck('size_id')->all();
+        $color_products = ProdColor::where('product_id', $id)->pluck('color_id')->all();
+
+            //    dd($color_products);
         //        dd($size_products);
         $height_products_array = array();
         foreach ($size_products as $size_product) {
@@ -315,9 +337,9 @@ class ProductController extends Controller
 
         }
 
-        if(empty($height_products)){
+        if (empty($height_products)) {
 
-            $height_products=(ProdHeight::where('product_id', $id)->first())->quantity;
+            $height_products = (ProdHeight::where('product_id', $id)->first())->quantity;
             // dd($height_products);
         }
         //        dd(count($height_products_array));
@@ -344,7 +366,9 @@ class ProductController extends Controller
             'height_products',
             'height_products_array',
             'size_products',
-            'size_guides'
+            'size_guides',
+            'colors',
+            'color_products'
         ));
     }
 
@@ -358,11 +382,13 @@ class ProductController extends Controller
      */
     public function updateProduct(Request $request, $id)
     {
-            //    dd($request->all());
+        //    dd($request->all());
         $messeges = [
 
 
             'size_guide_id.required' => "برجاء اختيار دليل المقاسات المناسب",
+            'color.required' => "برجاء ادخال لون المنتج",
+
             'photo.mimes' => " يجب ان تكون الصورة jpg او jpeg او png  ",
             'photo.max' => " الحد الاقصي للصورة 4 ميجا ",
             //            'size_photo.required' => "صورة المقاسات مطلوبة",
@@ -378,7 +404,7 @@ class ProductController extends Controller
             // "size_guide_id" => "required",
             //            "height.*" => "required",
             //            "quantity.*" => "required",
-            //            'size' => 'required',
+                       'color' => 'required',
             "price" => "required|Numeric",
 
         ], $messeges);
@@ -391,13 +417,13 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($id);
         $cat_type = BasicCategory::find($request->basic_category_id)->type;
-        if ((!$request->has('size') && $cat_type != 1) || ($request->size_guide_id == null && $cat_type != 1)) {
+        if ((!$request->has('size') && $cat_type != 1) ) {
             // dd($cat_type,$request->size);
             Alert::error('error', "برجاء اختيار المقاسات و دليل المقاسات");
             return back()->withInput();
         }
-        if ($cat_type == 1 && $request->qut==null) {
-        // dd($cat_type);
+        if ($cat_type == 1 && $request->qut == null) {
+            // dd($cat_type);
 
             Alert::error('error', 'يجب ادخال الكميه المناسبه للمنتج');
             return back();
@@ -421,8 +447,8 @@ class ProductController extends Controller
             if (file_exists(storage_path('app/public/' . $product->img))) {
                 unlink(storage_path('app/public/' . $product->img));
             }
-            $img = \Image::make($image)->resize(512, 640);
-            $img->save(public_path('storage/' . $path . $file_name), 60);
+            $img = \Image::make($image)->resize(640,690);
+            $img->save(public_path('storage/' . $path . $file_name), 80);
 
 
 
@@ -434,7 +460,7 @@ class ProductController extends Controller
                 'featured' => $request['featured'] ?: 0,
                 'basic_category_id' => $request['basic_category_id'],
                 'category_id' => $request['category_id'] ?: 0,
-                'size_guide_id' => $request['size_guide_id'] ?: 0,
+                'size_guide_id' => $request['size_guide_id'] ?: null,
                 'title_ar' => $request['title_ar'] ?: '',
                 'title_en' => $request['title_en'] ?: '',
                 'description_en' => $request['description_en'] ?: '',
@@ -494,7 +520,7 @@ class ProductController extends Controller
                 'featured' => $request['featured'] ?: 0,
                 'basic_category_id' => $request['basic_category_id'],
                 'category_id' => $request['category_id'] ?: 0,
-                'size_guide_id' => $request['size_guide_id'] ?: 0,
+                'size_guide_id' => $request['size_guide_id'] ?: null,
                 'title_ar' => $request['title_ar'] ?: '',
                 'title_en' => $request['title_en'] ?: '',
                 'description_en' => $request['description_en'] ?: '',
@@ -508,7 +534,8 @@ class ProductController extends Controller
 
         ProdSize::where('product_id', $id)->delete();
         ProdHeight::where('product_id', $id)->delete();
-        if ($request->has('size')&& $cat_type != 1) {
+        ProdColor::where('product_id', $id)->delete();
+        if ($request->has('size') && $cat_type != 1) {
             if (count($request->size) > 0) {
 
                 foreach ($request->size as $size) {
@@ -534,15 +561,28 @@ class ProductController extends Controller
                 }
             }
         }
-        if($cat_type == 1){
-            $quantity=$request->qut;
+        if ($request->has('color') ) {
+            // dd('color');
+            if (count($request->color) > 0) {
+                foreach ($request->color as $color) {
+
+                    if ($color) {
+                        ProdColor::create([
+                            "product_id" => $id,
+                            "color_id" => $color,
+                        ]);
+                    }
+                }
+            }
+        }
+        if ($cat_type == 1) {
+            $quantity = $request->qut;
             ProdHeight::create([
                 "product_id" => $id,
                 "size_id" => 0,
                 'height_id' => 0,
                 'quantity' => $quantity,
             ]);
-
         }
 
 
